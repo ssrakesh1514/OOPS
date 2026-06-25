@@ -1,0 +1,452 @@
+Q1. Class and Object ✅
+
+Your answer:
+
+Class is a template of the object and object is an instance of the class.
+
+Good. In interview add an example:
+
+Class = Car blueprint. Object = BMW, Audi, Tesla cars created from that blueprint.
+
+Q2. Encapsulation ⚠️
+
+Your answer:
+
+wrapping up the implementation of data members and methods
+
+Better answer:
+
+Encapsulation is bundling data and methods into a single unit and restricting direct access to data using access modifiers (private, protected, public).
+
+Example:
+
+class Employee {
+    private int salary;
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+}
+
+How achieved?
+
+Private variables
+Getter/Setter methods
+Q3. Abstraction ✅ but incomplete
+
+Your answer:
+
+hiding unnecessary data and showing valuable info
+
+Better:
+
+Abstraction hides implementation details and exposes only essential functionality.
+
+Example:
+
+Car car = new Car();
+car.start();
+
+User knows start().
+
+User doesn't know how engine ignition works internally.
+
+Q4. Inheritance ✅
+
+Good.
+
+But interviewer may ask:
+
+Why use inheritance?
+
+Answer:
+
+Code reusability
+Extensibility
+Supports polymorphism
+
+Also remember:
+
+Java supports:
+
+Single
+Multilevel
+Hierarchical
+
+Java does not support Multiple Inheritance through classes.
+
+Q5. Polymorphism ⚠️
+
+You made one mistake.
+
+You said:
+
+same method with different return types
+
+❌ Wrong
+
+Return type alone cannot overload.
+
+Invalid:
+
+int add(int a)
+double add(int a)
+
+Compiler error.
+
+Correct overloading:
+
+add(int a)
+add(int a, int b)
+add(double a)
+Q6. Overloading ✅
+void show(int a){}
+void show(double a){}
+
+✔ Compiles successfully.
+
+Because parameter types differ.
+
+Q7. Overriding ⚠️
+
+You explained concept but interviewer asked rules.
+
+Important rules:
+
+Same method name
+Same parameters
+Child class inherits parent
+Return type same or covariant
+Access modifier cannot be more restrictive
+Static methods cannot be overridden
+Q8. Output ❌
+
+You answered:
+
+bark inheritance
+
+Output:
+
+Bark
+
+Correct.
+
+But principle is:
+
+✅ Runtime Polymorphism (Dynamic Method Dispatch)
+
+NOT inheritance.
+
+Reason:
+
+Animal a = new Dog();
+
+Reference = Parent
+
+Object = Child
+
+JVM decides at runtime which method to execute.
+
+Q9. Static Method ❌
+
+You said:
+
+yes overriding
+
+Actually:
+
+❌ Static methods are NOT overridden.
+
+They are Method Hiding.
+
+Example:
+
+A a = new B();
+a.show();
+
+Output:
+
+A
+
+Because static methods belong to class, not object.
+
+Q10. Most Important Interview Question ⚠️
+
+You need a stronger answer.
+
+Animal a = new Dog();
+Parent reference
+Child object
+Can access only parent-visible methods
+Runtime polymorphism possible
+Dog d = new Dog();
+Child reference
+Child object
+Can access all Dog methods
+
+Example:
+
+class Animal {
+    void eat(){}
+}
+
+class Dog extends Animal {
+    void bark(){}
+}
+Animal a = new Dog();
+
+a.eat();   // OK
+a.bark();  // Compile Error
+Dog d = new Dog();
+
+d.eat();   // OK
+d.bark();  // OK
+Hard Interview Question 1
+
+Predict the output:
+
+class Parent {
+    int x = 10;
+
+    void show() {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+    int x = 20;
+
+    void show() {
+        System.out.println("Child");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Parent p = new Child();
+
+        System.out.println(p.x);
+        p.show();
+    }
+}
+
+Let's analyze carefully.
+
+Parent p = new Child();
+Variable Access
+System.out.println(p.x);
+
+Variables are resolved using the reference type, not the object type.
+
+Reference type = Parent
+
+So:
+
+p.x
+
+means:
+
+Parent.x
+
+Output:
+
+10
+Method Call
+p.show();
+
+Methods are resolved using the actual object type at runtime.
+
+Object type = Child
+
+So JVM calls:
+
+Child.show();
+
+Output:
+
+Child
+Final Output
+10
+Child
+Golden Interview Rule
+
+Variables → Reference Type (Compile Time)
+
+Parent p = new Child();
+System.out.println(p.x);  // Parent's x
+
+Methods → Object Type (Runtime)
+
+p.show(); // Child's show()
+
+This distinction is one of the most frequently asked OOP questions.
+
+Next Question (Slightly Harder)
+
+What will be the output?
+
+class Parent {
+    static void display() {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+    static void display() {
+        System.out.println("Child");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Parent p = new Child();
+        p.display();
+    }
+}
+Parent
+Child
+Compile Error
+Runtime Error
+
+Pick one and explain why.
+
+The output will be:
+
+Parent
+Child
+Why?
+
+When you create:
+
+Child c = new Child();
+
+Java first executes the parent constructor before the child constructor.
+
+The compiler automatically inserts:
+
+super();
+
+as the first line of every child constructor (if you don't write it yourself).
+
+So Java actually treats it like:
+
+class Child extends Parent {
+    Child() {
+        super();          // inserted automatically
+        System.out.println("Child");
+    }
+}
+
+Execution flow:
+
+new Child()
+Child constructor starts
+super() is called automatically
+Parent constructor executes → prints Parent
+Control returns to Child constructor
+Child constructor executes → prints Child
+
+Output:
+
+Parent
+Child
+Interview Rule
+
+Whenever an object of a child class is created:
+
+Parent constructor executes first, then Child constructor.
+
+Now try this one:
+
+class Parent {
+    Parent() {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+    Child() {
+        this(10);
+        System.out.println("Default");
+    }
+
+    Child(int x) {
+        System.out.println("Parameterized");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        new Child();
+    }
+}
+
+What will be the output?
+
+This tests the difference between this() and super(), a very common interview question.
+
+where is object?
+
+Good question.
+
+The object is created here:
+
+Child c = new Child();
+
+or even:
+
+new Child();
+
+The new keyword creates the object in memory.
+
+For example:
+
+Child c = new Child();
+new Child() → creates the Child object
+c → reference variable pointing to that object
+
+Think of it like:
+
+c  ------>  [ Child Object ]
+
+Because Child extends Parent, the Child object contains both:
+
+[ Parent Part ]
+[ Child Part  ]
+
+So when the object is created:
+
+Memory for the whole Child object is allocated.
+Parent constructor runs first to initialize the Parent part.
+Child constructor runs to initialize the Child part.
+
+That's why:
+
+Child c = new Child();
+
+prints:
+
+Parent
+Child
+
+even though you never explicitly created a Parent object.
+
+The Parent portion exists inside the Child object and must be initialized first.
+
+Interviewer's follow-up
+
+Is a separate Parent object created here?
+
+Child c = new Child();
+
+Answer:
+
+❌ No.
+
+Only one Child object is created.
+
+The Parent constructor runs because the Child object contains the inherited Parent state, not because a separate Parent object is created.
